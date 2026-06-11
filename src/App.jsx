@@ -12,9 +12,27 @@ function App() {
   const fetchFact = useCallback(async () => {
     setLoading(true);
     try {
+      // fetch page summary
       const response = await fetch("https://en.wikipedia.org/api/rest_v1/page/random/summary")
       const data = await response.json();
-      setFacts((currFacts) => [...currFacts, data]);
+
+      // fetch categories for page
+      const encodedTitle = encodeURIComponent(data.title);
+      const categoryResponse = await fetch(`https://en.wikipedia.org/w/api.php?action=query&prop=categories&titles=${encodedTitle}&cllimit=10&format=json&origin=*`)
+      const categoryData = await categoryResponse.json();
+
+      // extract categories
+      const pages = categoryData.query?.pages || {};
+      const pageId = Object.keys(pages)[0];
+      const rawCategories = pages[pageId]?.categories || [];
+
+      // clean up tags
+      const cleanTags = rawCategories
+        .map(cat => cat.title.replace("Category:", ""))
+        .filter(tag => !tag.includes("Articles") && !tag.includes("All ") && !tag.includes("CS1"));
+
+      // add to list of facts to display
+      setFacts((currFacts) => [...currFacts, {...data, tags: cleanTags}]);
     } catch(error) {
       console.error(error);
     } finally {

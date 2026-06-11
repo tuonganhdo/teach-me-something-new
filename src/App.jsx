@@ -65,8 +65,8 @@ function App() {
   return (
     <>
       <main id='app-container' className='flex flex-col pb-4'>
-        <div id='header' className='sticky top-0 left-0 px-5 py-3 w-full border-b border-gray-300 bg-white'>
-          <p className='font-medium text-gray-700 justify-center flex text-sm'>Teach me something new</p>
+        <div id='header' className='sticky top-0 left-0 px-5 py-4 w-full border-b border-gray-300 bg-white'>
+          <p className='font-bold uppercase tracking-wider text-blue-700 justify-center flex text-sm'>Teach me something new</p>
         </div>
         <div id='facts-feed' className="flex flex-col gap-y-4 my-4 w-[90vw] mx-auto">
           {facts.map((fact, index) => (
